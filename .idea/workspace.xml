@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e55fbc63-bb83-4df0-b2a4-3d4235b5097d" name="Changes" comment="" />
+    <list default="true" id="e55fbc63-bb83-4df0-b2a4-3d4235b5097d" name="Changes" comment="OTP-CMG" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -43,7 +43,7 @@
     "WebServerToolWindowFactoryState": "false",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "/Users/user/Documents/Developments/OTP",
+    "last_opened_file_path": "/Users/user/Documents/Developments/OTP-Twilio",
     "nodejs_package_manager_path": "npm"
   },
   "keyToStringList": {
@@ -71,6 +71,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="OTP-CMG" />
+    <option name="LAST_COMMIT_MESSAGE" value="OTP-CMG" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
