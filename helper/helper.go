@@ -76,6 +76,12 @@ func InternalServerError(writer http.ResponseWriter, request *http.Request, err 
 
 }
 
+func SetError(err Error, message string) Error {
+	err.IsError = true
+	err.Message = message
+	return err
+}
+
 func GenerateJWT(phone string) (string, error) {
 	var mySigningKey = []byte(secretkey)
 	token := jwt.New(jwt.SigningMethodHS256)

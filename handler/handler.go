@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"github.com/julienschmidt/httprouter"
 	"log"
 	"main/entity"
@@ -27,7 +28,13 @@ func (handler *OTPhandlerImplementation) Create(writer http.ResponseWriter, requ
 	helper.ReadFromRequestBody(request, &requestBody)
 
 	_, err := handler.OTPservice.Create(request.Context(), requestBody)
-	helper.HandlePanic(err)
+	if err != nil {
+		var err helper.Error
+		err = helper.SetError(err, "ADA YANG SALAH")
+		writer.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(writer).Encode(err)
+		return
+	}
 
 	responseBody := entity.Response{
 		Code:   200,
@@ -44,7 +51,7 @@ func (handler *OTPhandlerImplementation) Verification(writer http.ResponseWriter
 	requestBodyResponse := helper.RequestVerificationToVerification(requestBody)
 	_, err := handler.OTPservice.Verification(request.Context(), requestBodyResponse)
 	if err != nil {
-		log.Println("HANDLER", err)
+		log.Println("HANDLER VERIFICATION", err)
 	}
 
 	responseBody := entity.Response{

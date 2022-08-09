@@ -46,6 +46,7 @@ func CheckOTP(to entity.Verification) {
 	if err != nil {
 		log.Println("controllers", err)
 	}
+
 	if *resp.Status == "approved" {
 		validToken, err := helper.GenerateJWT(to.Phone)
 		if err != nil {

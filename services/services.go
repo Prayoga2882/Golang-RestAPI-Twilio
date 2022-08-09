@@ -17,19 +17,22 @@ type OTPservices interface {
 	Verification(ctx context.Context, request entity.Verification) (entity.Response, error)
 }
 
-type OTPserviceImplementation struct {
+type OTPservicesImplementation struct {
 	OTPrepository repository.OTPrepository
 	db            *sql.DB
 	validate      *validator.Validate
 }
 
-func NewOTPserviceImplementation(OTPrepository repository.OTPrepository, db *sql.DB, validate *validator.Validate) *OTPserviceImplementation {
-	return &OTPserviceImplementation{OTPrepository: OTPrepository, db: db, validate: validate}
+func NewOTPserviceImplementation(OTPrepository repository.OTPrepository, db *sql.DB, validate *validator.Validate) *OTPservicesImplementation {
+	return &OTPservicesImplementation{OTPrepository: OTPrepository, db: db, validate: validate}
 }
 
-func (service *OTPserviceImplementation) Create(ctx context.Context, request entity.Request) (entity.Response, error) {
+func (service *OTPservicesImplementation) Create(ctx context.Context, request entity.Request) (entity.Response, error) {
 	err := service.validate.Struct(request)
-	helper.HandlePanic(err)
+	if err != nil {
+		log.Println("SERVICE CREATE", err)
+		panic(err)
+	}
 
 	requestClient := entity.Request{
 		Phone: request.Phone,
@@ -37,18 +40,24 @@ func (service *OTPserviceImplementation) Create(ctx context.Context, request ent
 
 	requestFinal := helper.RequestToUser(requestClient)
 	requestFinal, err = service.OTPrepository.Create(ctx, service.db, requestFinal)
-	helper.HandlePanic(err)
+	if err != nil {
+		log.Println("SERVICES CREATE 1", err)
+		panic(err)
+	}
 
 	err = controllers.SendOTP(requestClient.Phone)
-	helper.HandlePanic(err)
+	if err != nil {
+		log.Println("SERVICES CREATE 2", err)
+		panic(err)
+	}
 
 	return helper.UserToResponse(requestFinal), nil
 }
 
-func (service *OTPserviceImplementation) Verification(ctx context.Context, request entity.Verification) (entity.Response, error) {
+func (service *OTPservicesImplementation) Verification(ctx context.Context, request entity.Verification) (entity.Response, error) {
 	err := service.validate.Struct(request)
 	if err != nil {
-		log.Println("SERVICE", err)
+		log.Println("SERVICE VERIFICATION", err)
 	}
 
 	requestClient := entity.Verification{
@@ -62,7 +71,7 @@ func (service *OTPserviceImplementation) Verification(ctx context.Context, reque
 	}
 	_, err = service.OTPrepository.Verification(ctx, service.db, requestClient)
 	if err != nil {
-		log.Println("SERVICE 1", err)
+		log.Println("SERVICE VERIFICATION 1", err)
 	}
 
 	controllers.CheckOTP(requestClient)

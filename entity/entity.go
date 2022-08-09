@@ -8,13 +8,13 @@ type User struct {
 }
 
 type Verification struct {
-	Id         int    `json:"id"`
-	Code       string `json:"code"`
-	Phone      string `json:"phone"`
-	Receiver   string `json:"receiver"`
-	Payload    string `json:"payload"`
-	VerifiedAt time.Time
-	ExpiredAt  time.Time
+	Id         int       `json:"id"`
+	Code       string    `json:"code"`
+	Phone      string    `json:"phone"`
+	Receiver   string    `json:"receiver"`
+	Payload    string    `json:"payload"`
+	VerifiedAt time.Time `json:"verifiedAt"`
+	ExpiredAt  time.Time `json:"expiredAt"`
 }
 
 type Request struct {
