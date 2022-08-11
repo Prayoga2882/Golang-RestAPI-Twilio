@@ -72,15 +72,17 @@ func (service *OTPservicesImplementation) Verification(ctx context.Context, requ
 		VerifiedAt: time.Now(),
 		ExpiredAt:  time.Now(),
 	}
-	_, err = service.OTPrepository.Verification(ctx, service.db, requestClient)
-	if err != nil {
-		fmt.Println("SERVICE VERIFICATION 1")
-		return validate, err
-	}
 
 	err = controllers.CheckOTP(requestClient)
 	if err != nil {
 		fmt.Println("SERVICE VERIFICATION 2", err)
+		return validate, err
+	}
+
+	_, err = service.OTPrepository.Verification(ctx, service.db, requestClient)
+	if err != nil {
+		fmt.Println("SERVICE VERIFICATION 1")
+		return validate, err
 	}
 
 	return helper.RequestVerificationToResponse(requestClient), nil

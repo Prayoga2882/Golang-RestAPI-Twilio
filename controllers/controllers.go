@@ -1,10 +1,10 @@
 package controllers
 
 import (
+	"errors"
 	"fmt"
 	"github.com/twilio/twilio-go"
 	openapi "github.com/twilio/twilio-go/rest/verify/v2"
-	"log"
 	"main/entity"
 	"os"
 )
@@ -44,14 +44,14 @@ func CheckOTP(to entity.Verification) error {
 
 	resp, err := client.VerifyV2.CreateVerificationCheck(VERIFY_SERVICE_SID, params)
 	if err != nil {
-		log.Println("controllers", err)
+		return errors.New("code not match ")
 	}
 
 	if *resp.Status == "approved" {
-		fmt.Println("Correct!")
+		fmt.Println("Correct !")
 		return nil
 	} else {
-		fmt.Println("Incorrect!")
-		return err
+		fmt.Println("INCORRECT !")
+		return errors.New("CODE NOT MATCH")
 	}
 }

@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"github.com/julienschmidt/httprouter"
-	"log"
 	"main/entity"
 	"main/helper"
 	"main/services"
@@ -58,22 +57,23 @@ func (handler *OTPhandlerImplementation) Verification(writer http.ResponseWriter
 		return
 	}
 
-	responseBody := entity.Response{
-		Code:   200,
-		Status: "Successfully",
-		Data:   requestBody.Phone,
-	}
-
-	validToken, err := helper.GenerateJWT(requestBody.Phone)
+	validToken, err := helper.GenerateJWT()
 	if err != nil {
-		log.Println("controllers 1", err)
+		var err helper.Error
+		err = helper.SetError(err, "FAILED GENERATE TOKEN !")
+		writer.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(writer).Encode(err)
+		return
 	}
 
 	var token helper.Token
-	token.Email = requestBody.Phone
 	token.TokenString = validToken
 
+	responseBody := entity.Response{
+		Code:   200,
+		Status: "Successfully",
+		Data:   token,
+	}
+
 	helper.WriteToResponseBody(writer, responseBody)
-	writer.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(writer).Encode(token)
 }

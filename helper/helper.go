@@ -60,7 +60,6 @@ var (
 )
 
 type Token struct {
-	Email       string `json:"email"`
 	TokenString string `json:"token"`
 }
 
@@ -125,12 +124,11 @@ func SetError(err Error, message string) Error {
 	return err
 }
 
-func GenerateJWT(phone string) (string, error) {
+func GenerateJWT() (string, error) {
 	var mySigningKey = []byte(secretkey)
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 	claims["authorized"] = true
-	claims["phone"] = phone
 	claims["exp"] = time.Now().Add(time.Minute * 30).Unix()
 
 	tokenString, err := token.SignedString(mySigningKey)
