@@ -12,6 +12,49 @@ import (
 	"time"
 )
 
+const (
+	StatusMessageOK string = "OK"
+
+	// StatusMessageBadRequest is custom status message for bad request
+	StatusMessageBadRequest string = "Bad Request"
+
+	// StatusMessageInternalServerError is custom status message for unknown error / internal server error
+	StatusMessageInternalServerError string = "Internal Error"
+
+	// StatusMessageNotFound is custom status message for data not found
+	StatusMessageNotFound string = "Not Found"
+
+	// StatusMessageForbidden is custom status message for forbidden
+	StatusMessageForbidden string = "Forbidden"
+)
+
+type ErrorResponse struct {
+	Error string `json:"error"`
+}
+
+type ErrorHandler struct {
+	Err           error
+	Status        string
+	MessageStatus string
+	HTTPStatus    int
+}
+
+func NewErrorHandler(err error, status string, messageStatus string, HTTPStatus int) *ErrorHandler {
+	return &ErrorHandler{Err: err, Status: status, MessageStatus: messageStatus, HTTPStatus: HTTPStatus}
+}
+
+func ErrBadRequest(err error, message string) *ErrorHandler {
+	if len(message) <= 0 || message == "" {
+		message = StatusMessageBadRequest
+	}
+	return &ErrorHandler{
+		Err:           err,
+		Status:        StatusMessageBadRequest,
+		MessageStatus: message,
+		HTTPStatus:    404,
+	}
+}
+
 var (
 	secretkey string = "secretkeyjwt"
 )

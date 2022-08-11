@@ -6,7 +6,6 @@ import (
 	openapi "github.com/twilio/twilio-go/rest/verify/v2"
 	"log"
 	"main/entity"
-	"main/helper"
 	"os"
 )
 
@@ -31,13 +30,14 @@ func SendOTP(to string) error {
 
 	if err != nil {
 		fmt.Println(err.Error())
+		return err
 	} else {
 		fmt.Printf("Sent verification '%s'\n", *resp.Sid)
 	}
 	return err
 }
 
-func CheckOTP(to entity.Verification) {
+func CheckOTP(to entity.Verification) error {
 	params := &openapi.CreateVerificationCheckParams{}
 	params.SetTo(to.Phone)
 	params.SetCode(to.Code)
@@ -48,18 +48,10 @@ func CheckOTP(to entity.Verification) {
 	}
 
 	if *resp.Status == "approved" {
-		validToken, err := helper.GenerateJWT(to.Phone)
-		if err != nil {
-			log.Println("controllers 1", err)
-		}
-
-		var token helper.Token
-		token.Email = to.Phone
-		token.TokenString = validToken
-
-		fmt.Println("token : ", token)
 		fmt.Println("Correct!")
+		return nil
 	} else {
 		fmt.Println("Incorrect!")
+		return err
 	}
 }

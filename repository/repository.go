@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"log"
+	"fmt"
 	"main/entity"
 	"main/helper"
 )
@@ -28,14 +28,14 @@ func (otp *OTPrepositoryImplementation) Create(ctx context.Context, db *sql.DB, 
 	sql := "INSERT INTO users(phone) VALUES (?)"
 	execContext, err := db.ExecContext(ctx, sql, user.Phone)
 	if err != nil {
-		log.Println("REPOSITORY", err)
-		panic(err)
+		fmt.Println("REPOSITORY")
+		return user, err
 	}
 
 	id, err := execContext.LastInsertId()
 	if err != nil {
-		log.Println("REPOSITORY 1", err)
-		panic(err)
+		fmt.Println("REPOSITORY 1")
+		return user, err
 	}
 	user.Id = int(id)
 
@@ -46,11 +46,13 @@ func (otp *OTPrepositoryImplementation) Verification(ctx context.Context, db *sq
 	sql := "INSERT INTO verification (code, phone, receiver, payload, verified_at, expired_at) VALUES (?, ?, ?, ?, ?, ?)"
 	execContext, err := db.ExecContext(ctx, sql, verified.Code, verified.Phone, verified.Receiver, verified.Payload, verified.VerifiedAt, verified.ExpiredAt)
 	if err != nil {
-		log.Println("REPOSITORY", err)
+		fmt.Println("REPOSITORY")
+		return verified, err
 	}
 	id, err := execContext.LastInsertId()
 	if err != nil {
-		log.Println("REPOSITORY 1", err)
+		fmt.Println("REPOSITORY 1")
+		return verified, err
 	}
 	verified.Id = int(id)
 	return verified, nil
