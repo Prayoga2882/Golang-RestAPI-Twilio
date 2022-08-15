@@ -3,8 +3,10 @@ package services
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"github.com/go-playground/validator/v10"
+	"log"
 	"main/controllers"
 	"main/entity"
 	"main/helper"
@@ -38,21 +40,28 @@ func (service *OTPservicesImplementation) Create(ctx context.Context, request en
 	requestClient := entity.Request{
 		Phone: request.Phone,
 	}
-
+	requestClintFinal := helper.RequestToUser(requestClient)
+	hasil, err := service.OTPrepository.GetUserByPhone(ctx, service.db, requestClintFinal)
+	helper.HandlePanic(err)
+	if hasil.Id > 0 {
+		log.Println("UDAH ADA COK !!")
+		return validate, errors.New("dah ada nih")
+	}
 	requestFinal := helper.RequestToUser(requestClient)
+
 	requestFinal, err = service.OTPrepository.Create(ctx, service.db, requestFinal)
 	if err != nil {
 		fmt.Println("SERVICES CREATE 1")
 		return validate, err
 	}
 
-	err = controllers.SendOTP(requestClient.Phone)
-	if err != nil {
-		fmt.Println("SERVICES CREATE 2")
-		return validate, err
-	}
+	//err = controllers.SendOTP(requestClient.Phone)
+	//if err != nil {
+	//	fmt.Println("SERVICES CREATE 2")
+	//	return validate, err
+	//}
 
-	return helper.UserToResponse(requestFinal), nil
+	return helper.UserToResponse(hasil), nil
 }
 
 func (service *OTPservicesImplementation) Verification(ctx context.Context, request entity.Verification) (entity.Response, error) {

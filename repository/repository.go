@@ -5,13 +5,14 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 	"main/entity"
-	"main/helper"
 )
 
 type OTPrepository interface {
 	Create(ctx context.Context, db *sql.DB, user entity.User) (entity.User, error)
 	Verification(ctx context.Context, db *sql.DB, request entity.Verification) (entity.Verification, error)
+	GetUserByPhone(ctx context.Context, db *sql.DB, user entity.User) (entity.User, error)
 }
 
 type OTPrepositoryImplementation struct{}
@@ -20,11 +21,19 @@ func NewOTPrepositoryImplementation() *OTPrepositoryImplementation {
 	return &OTPrepositoryImplementation{}
 }
 
-func (otp *OTPrepositoryImplementation) Create(ctx context.Context, db *sql.DB, user entity.User) (entity.User, error) {
-	if helper.UserExists(db, user.Phone) {
-		return user, errors.New("phone already used")
+func (otp *OTPrepositoryImplementation) GetUserByPhone(ctx context.Context, db *sql.DB, user entity.User) (entity.User, error) {
+	sql := "SELECT id, phone FROM users WHERE phone = ?"
+	result := db.QueryRowContext(ctx, sql, user.Phone)
+	var data = entity.User{}
+	err := result.Scan(&data.Id, &data.Phone)
+	if err != nil {
+		log.Println("AGOY", data)
+		return data, errors.New("Udah ada")
 	}
+	return data, nil
+}
 
+func (otp *OTPrepositoryImplementation) Create(ctx context.Context, db *sql.DB, user entity.User) (entity.User, error) {
 	sql := "INSERT INTO users(phone) VALUES (?)"
 	execContext, err := db.ExecContext(ctx, sql, user.Phone)
 	if err != nil {
