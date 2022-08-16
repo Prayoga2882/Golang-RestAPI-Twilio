@@ -27,8 +27,8 @@ func (otp *OTPrepositoryImplementation) GetUserByPhone(ctx context.Context, db *
 	var data = entity.User{}
 	err := result.Scan(&data.Id, &data.Phone)
 	if err != nil {
-		log.Println("AGOY", data)
-		return data, errors.New("Udah ada")
+		log.Println("REPOSITORY ", data)
+		return data, errors.New("already used")
 	}
 	return data, nil
 }
@@ -37,13 +37,13 @@ func (otp *OTPrepositoryImplementation) Create(ctx context.Context, db *sql.DB, 
 	sql := "INSERT INTO users(phone) VALUES (?)"
 	execContext, err := db.ExecContext(ctx, sql, user.Phone)
 	if err != nil {
-		fmt.Println("REPOSITORY")
+		fmt.Println("REPOSITORY 1")
 		return user, err
 	}
 
 	id, err := execContext.LastInsertId()
 	if err != nil {
-		fmt.Println("REPOSITORY 1")
+		fmt.Println("REPOSITORY 2")
 		return user, err
 	}
 	user.Id = int(id)

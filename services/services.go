@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-playground/validator/v10"
-	"log"
 	"main/controllers"
 	"main/entity"
 	"main/helper"
@@ -44,8 +43,7 @@ func (service *OTPservicesImplementation) Create(ctx context.Context, request en
 	hasil, err := service.OTPrepository.GetUserByPhone(ctx, service.db, requestClintFinal)
 	helper.HandlePanic(err)
 	if hasil.Id > 0 {
-		log.Println("UDAH ADA COK !!")
-		return validate, errors.New("dah ada nih")
+		return validate, errors.New("already used service")
 	}
 	requestFinal := helper.RequestToUser(requestClient)
 
