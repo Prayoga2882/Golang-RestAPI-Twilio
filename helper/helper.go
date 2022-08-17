@@ -33,7 +33,6 @@ func NewHandleError(error string) *HandleError {
 }
 
 func ErrorHandler(writer http.ResponseWriter, request *http.Request, err interface{}) {
-
 	if BadRequest(writer, request, err) {
 		return
 	}
@@ -42,7 +41,7 @@ func ErrorHandler(writer http.ResponseWriter, request *http.Request, err interfa
 }
 
 func BadRequest(writer http.ResponseWriter, request *http.Request, err interface{}) bool {
-	exception, ok := err.(Error)
+	exeption, ok := err.(Error)
 	if ok {
 		writer.Header().Set("Content-Type", "application/json")
 		writer.WriteHeader(http.StatusBadRequest)
@@ -50,7 +49,7 @@ func BadRequest(writer http.ResponseWriter, request *http.Request, err interface
 		webResponse := entity.Response{
 			Code:   400,
 			Status: "BAD REQUEST",
-			Data:   exception,
+			Data:   exeption,
 		}
 		WriteToResponseBody(writer, webResponse)
 		return true
@@ -69,7 +68,6 @@ func ValidationError(writer http.ResponseWriter, request *http.Request, err inte
 		Data:   nil,
 	}
 	WriteToResponseBody(writer, webResponse)
-
 }
 
 func SetError(err Error, message string) Error {
