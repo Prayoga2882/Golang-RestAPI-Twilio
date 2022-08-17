@@ -3,16 +3,14 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"fmt"
-	"log"
 	"main/entity"
 )
 
 type OTPrepository interface {
 	Create(ctx context.Context, db *sql.DB, user entity.User) (entity.User, error)
 	Verification(ctx context.Context, db *sql.DB, request entity.Verification) (entity.Verification, error)
-	GetUserByPhone(ctx context.Context, db *sql.DB, user entity.User) (entity.User, error)
+	//GetUserByPhone(ctx context.Context, db *sql.DB, user entity.User) (entity.User, error)
 }
 
 type OTPrepositoryImplementation struct{}
@@ -21,17 +19,17 @@ func NewOTPrepositoryImplementation() *OTPrepositoryImplementation {
 	return &OTPrepositoryImplementation{}
 }
 
-func (otp *OTPrepositoryImplementation) GetUserByPhone(ctx context.Context, db *sql.DB, user entity.User) (entity.User, error) {
-	sql := "SELECT id, phone FROM users WHERE phone = ?"
-	result := db.QueryRowContext(ctx, sql, user.Phone)
-	var data = entity.User{}
-	err := result.Scan(&data.Id, &data.Phone)
-	if err != nil {
-		log.Println("REPOSITORY ", data)
-		return data, errors.New("already used")
-	}
-	return data, nil
-}
+//func (otp *OTPrepositoryImplementation) GetUserByPhone(ctx context.Context, db *sql.DB, user entity.User) (entity.User, error) {
+//	sql := "SELECT id, phone FROM users WHERE phone = ?"
+//	result := db.QueryRowContext(ctx, sql, user.Id, user.Phone)
+//	var data = entity.User{}
+//	err := result.Scan(&data.Id, &data.Phone)
+//	if err != nil {
+//		log.Println("REPOSITORY ", data)
+//		return data, errors.New("already used")
+//	}
+//	return data, nil
+//}
 
 func (otp *OTPrepositoryImplementation) Create(ctx context.Context, db *sql.DB, user entity.User) (entity.User, error) {
 	sql := "INSERT INTO users(phone) VALUES (?)"

@@ -3,7 +3,6 @@ package services
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"fmt"
 	"github.com/go-playground/validator/v10"
 	"main/controllers"
@@ -29,45 +28,37 @@ func NewOTPserviceImplementation(OTPrepository repository.OTPrepository, db *sql
 }
 
 func (service *OTPservicesImplementation) Create(ctx context.Context, request entity.Request) (entity.Response, error) {
-	validate := entity.Response{}
 	err := service.validate.Struct(request)
 	if err != nil {
 		fmt.Println("SERVICES CREATE")
-		return validate, err
+		panic(helper.NewHandleError(err.Error()))
 	}
 
 	requestClient := entity.Request{
 		Phone: request.Phone,
-	}
-	requestClintFinal := helper.RequestToUser(requestClient)
-	hasil, err := service.OTPrepository.GetUserByPhone(ctx, service.db, requestClintFinal)
-	helper.HandlePanic(err)
-	if hasil.Id > 0 {
-		return validate, errors.New("already used service")
 	}
 	requestFinal := helper.RequestToUser(requestClient)
 
 	requestFinal, err = service.OTPrepository.Create(ctx, service.db, requestFinal)
 	if err != nil {
 		fmt.Println("SERVICES CREATE 1")
-		return validate, err
+		panic(helper.NewHandleError(err.Error()))
 	}
 
 	//err = controllers.SendOTP(requestClient.Phone)
 	//if err != nil {
 	//	fmt.Println("SERVICES CREATE 2")
-	//	return validate, err
+	//	panic(helper.NewHandleError(err.Error()))
 	//}
 
-	return helper.UserToResponse(hasil), nil
+	return helper.UserToResponse(requestFinal), nil
 }
 
 func (service *OTPservicesImplementation) Verification(ctx context.Context, request entity.Verification) (entity.Response, error) {
-	validate := entity.Response{}
 	err := service.validate.Struct(request)
 	if err != nil {
 		fmt.Println("SERVICE VERIFICATION")
-		return validate, err
+		panic(helper.NewHandleError(err.Error()))
 	}
 
 	requestClient := entity.Verification{
@@ -83,13 +74,13 @@ func (service *OTPservicesImplementation) Verification(ctx context.Context, requ
 	err = controllers.CheckOTP(requestClient)
 	if err != nil {
 		fmt.Println("SERVICE VERIFICATION 2", err)
-		return validate, err
+		panic(helper.NewHandleError(err.Error()))
 	}
 
 	_, err = service.OTPrepository.Verification(ctx, service.db, requestClient)
 	if err != nil {
 		fmt.Println("SERVICE VERIFICATION 1")
-		return validate, err
+		panic(helper.NewHandleError(err.Error()))
 	}
 
 	return helper.RequestVerificationToResponse(requestClient), nil

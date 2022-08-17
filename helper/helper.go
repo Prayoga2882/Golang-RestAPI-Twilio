@@ -4,56 +4,12 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt"
 	"log"
 	"main/entity"
 	"net/http"
 	"time"
 )
-
-const (
-	StatusMessageOK string = "OK"
-
-	// StatusMessageBadRequest is custom status message for bad request
-	StatusMessageBadRequest string = "Bad Request"
-
-	// StatusMessageInternalServerError is custom status message for unknown error / internal server error
-	StatusMessageInternalServerError string = "Internal Error"
-
-	// StatusMessageNotFound is custom status message for data not found
-	StatusMessageNotFound string = "Not Found"
-
-	// StatusMessageForbidden is custom status message for forbidden
-	StatusMessageForbidden string = "Forbidden"
-)
-
-type ErrorResponse struct {
-	Error string `json:"error"`
-}
-
-type ErrorHandler struct {
-	Err           error
-	Status        string
-	MessageStatus string
-	HTTPStatus    int
-}
-
-func NewErrorHandler(err error, status string, messageStatus string, HTTPStatus int) *ErrorHandler {
-	return &ErrorHandler{Err: err, Status: status, MessageStatus: messageStatus, HTTPStatus: HTTPStatus}
-}
-
-func ErrBadRequest(err error, message string) *ErrorHandler {
-	if len(message) <= 0 || message == "" {
-		message = StatusMessageBadRequest
-	}
-	return &ErrorHandler{
-		Err:           err,
-		Status:        StatusMessageBadRequest,
-		MessageStatus: message,
-		HTTPStatus:    404,
-	}
-}
 
 var (
 	secretkey string = "secretkeyjwt"
@@ -68,26 +24,25 @@ type Error struct {
 	Message string `json:"message"`
 }
 
-func NotFoundError(writer http.ResponseWriter, request *http.Request, err interface{}) bool {
-	exception, ok := err.(Error)
-	if ok {
-		writer.Header().Set("Content-Type", "application/json")
-		writer.WriteHeader(http.StatusNotFound)
-
-		webResponse := entity.Response{
-			Code:   404,
-			Status: "NOT FOUND",
-			Data:   exception,
-		}
-		WriteToResponseBody(writer, webResponse)
-		return true
-	} else {
-		return false
-	}
+type HandleError struct {
+	Error string
 }
 
-func ValidationErrors(writer http.ResponseWriter, request *http.Request, err interface{}) bool {
-	exception, ok := err.(validator.ValidationErrors)
+func NewHandleError(error string) *HandleError {
+	return &HandleError{Error: error}
+}
+
+func ErrorHandler(writer http.ResponseWriter, request *http.Request, err interface{}) {
+
+	if BadRequest(writer, request, err) {
+		return
+	}
+
+	ValidationError(writer, request, err)
+}
+
+func BadRequest(writer http.ResponseWriter, request *http.Request, err interface{}) bool {
+	exception, ok := err.(Error)
 	if ok {
 		writer.Header().Set("Content-Type", "application/json")
 		writer.WriteHeader(http.StatusBadRequest)
@@ -97,7 +52,6 @@ func ValidationErrors(writer http.ResponseWriter, request *http.Request, err int
 			Status: "BAD REQUEST",
 			Data:   exception,
 		}
-
 		WriteToResponseBody(writer, webResponse)
 		return true
 	} else {
@@ -105,13 +59,13 @@ func ValidationErrors(writer http.ResponseWriter, request *http.Request, err int
 	}
 }
 
-func InternalServerError(writer http.ResponseWriter, request *http.Request, err interface{}) {
+func ValidationError(writer http.ResponseWriter, request *http.Request, err interface{}) {
 	writer.Header().Set("Content-Type", "application/json")
-	writer.WriteHeader(http.StatusInternalServerError)
+	writer.WriteHeader(http.StatusForbidden)
 
 	webResponse := entity.Response{
-		Code:   500,
-		Status: "INTERNAL SERVER ERROR",
+		Code:   403,
+		Status: "VALIDATION ERROR",
 		Data:   nil,
 	}
 	WriteToResponseBody(writer, webResponse)

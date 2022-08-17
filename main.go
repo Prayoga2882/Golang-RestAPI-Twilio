@@ -25,6 +25,8 @@ func main() {
 	router.POST("/api/register", handlerOTP.Create)
 	router.POST("/api/verification", handlerOTP.Verification)
 
+	router.PanicHandler = helper.ErrorHandler
+
 	server := http.Server{
 		Addr:    "localhost:3000",
 		Handler: router,

@@ -6,6 +6,7 @@ import (
 	"github.com/twilio/twilio-go"
 	openapi "github.com/twilio/twilio-go/rest/verify/v2"
 	"main/entity"
+	"main/helper"
 	"os"
 )
 
@@ -49,9 +50,9 @@ func CheckOTP(to entity.Verification) error {
 
 	if *resp.Status == "approved" {
 		fmt.Println("Correct !")
-		return nil
+		panic(helper.NewHandleError(err.Error()))
 	} else {
 		fmt.Println("INCORRECT !")
-		return errors.New("CODE NOT MATCH")
+		panic(helper.NewHandleError(err.Error()))
 	}
 }

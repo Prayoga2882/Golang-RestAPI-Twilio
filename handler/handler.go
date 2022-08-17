@@ -29,7 +29,7 @@ func (handler *OTPhandlerImplementation) Create(writer http.ResponseWriter, requ
 	_, err := handler.OTPservice.Create(request.Context(), requestBody)
 	if err != nil {
 		var err helper.Error
-		err = helper.SetError(err, "SOMETHING GONE WRONG !")
+		err = helper.SetError(err, "SOMETHING WENT WRONG !")
 		writer.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(writer).Encode(err)
 		return
@@ -51,7 +51,7 @@ func (handler *OTPhandlerImplementation) Verification(writer http.ResponseWriter
 	_, err := handler.OTPservice.Verification(request.Context(), requestBodyResponse)
 	if err != nil {
 		var err helper.Error
-		err = helper.SetError(err, "SOMETHING GONE WRONG !")
+		err = helper.SetError(err, "SOMETHING WENT WRONG !")
 		writer.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(writer).Encode(err)
 		return
