@@ -50,7 +50,7 @@ func CheckOTP(to entity.Verification) error {
 
 	if *resp.Status == "approved" {
 		fmt.Println("Correct !")
-		panic(helper.NewHandleError(err.Error()))
+		return nil
 	} else {
 		fmt.Println("INCORRECT !")
 		panic(helper.NewHandleError(err.Error()))
