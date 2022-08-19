@@ -45,11 +45,11 @@ func (service *OTPservicesImplementation) Create(ctx context.Context, request en
 		panic(helper.NewHandleError(err.Error()))
 	}
 
-	err = controllers.SendOTP(requestClient.Phone)
-	if err != nil {
-		fmt.Println("SERVICES CREATE 2")
-		panic(helper.NewHandleError(err.Error()))
-	}
+	//err = controllers.SendOTP(requestClient.Phone)
+	//if err != nil {
+	//	fmt.Println("SERVICES CREATE 2")
+	//	panic(helper.NewHandleError(err.Error()))
+	//}
 
 	return helper.UserToResponse(requestFinal), nil
 }

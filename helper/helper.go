@@ -1,11 +1,9 @@
 package helper
 
 import (
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	"github.com/golang-jwt/jwt"
-	"log"
 	"main/entity"
 	"net/http"
 	"time"
@@ -33,29 +31,20 @@ func NewHandleError(error string) *HandleError {
 }
 
 func ErrorHandler(writer http.ResponseWriter, request *http.Request, err interface{}) {
-	if BadRequest(writer, request, err) {
-		return
-	}
 
 	ValidationError(writer, request, err)
 }
 
-func BadRequest(writer http.ResponseWriter, request *http.Request, err interface{}) bool {
-	exeption, ok := err.(Error)
-	if ok {
-		writer.Header().Set("Content-Type", "application/json")
-		writer.WriteHeader(http.StatusBadRequest)
+func BadRequest(writer http.ResponseWriter, request *http.Request, err interface{}) {
+	writer.Header().Set("Content-Type", "application/json")
+	writer.WriteHeader(http.StatusBadRequest)
 
-		webResponse := entity.Response{
-			Code:   400,
-			Status: "BAD REQUEST",
-			Data:   exeption,
-		}
-		WriteToResponseBody(writer, webResponse)
-		return true
-	} else {
-		return false
+	webResponse := entity.Response{
+		Code:   400,
+		Status: "BAD REQUEST",
+		Data:   err,
 	}
+	WriteToResponseBody(writer, webResponse)
 }
 
 func ValidationError(writer http.ResponseWriter, request *http.Request, err interface{}) {
@@ -65,7 +54,7 @@ func ValidationError(writer http.ResponseWriter, request *http.Request, err inte
 	webResponse := entity.Response{
 		Code:   403,
 		Status: "VALIDATION ERROR",
-		Data:   nil,
+		Data:   err,
 	}
 	WriteToResponseBody(writer, webResponse)
 }
@@ -143,18 +132,4 @@ func WriteToResponseBody(writer http.ResponseWriter, response interface{}) {
 	encoder := json.NewEncoder(writer)
 	err := encoder.Encode(response)
 	HandlePanic(err)
-}
-
-func UserExists(db *sql.DB, phone string) bool {
-	sqlStmt := `SELECT phone FROM users WHERE phone = ?`
-	err := db.QueryRow(sqlStmt, phone).Scan(&phone)
-	if err != nil {
-		if err != sql.ErrNoRows {
-			// a real error happened! you should change your function return
-			// to "(bool, error)" and return "false, err" here
-			log.Print(err)
-		}
-		return false
-	}
-	return true
 }
