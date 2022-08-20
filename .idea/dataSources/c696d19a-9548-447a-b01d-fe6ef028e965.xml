@@ -1036,78 +1036,106 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </table>
     <column id="299" parent="297" name="id">
-      <AutoIncrement>4</AutoIncrement>
-      <DataType>int|0s</DataType>
+      <AutoIncrement>1</AutoIncrement>
+      <DataType>bigint unsigned|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
     <column id="300" parent="297" name="phone">
-      <DataType>varchar(100)|0s</DataType>
+      <DataType>varchar(200)|0s</DataType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <index id="301" parent="297" name="PRIMARY">
+    <column id="301" parent="297" name="receiver">
+      <DataType>varchar(200)|0s</DataType>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+    </column>
+    <column id="302" parent="297" name="payload">
+      <DataType>varchar(200)|0s</DataType>
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+    </column>
+    <column id="303" parent="297" name="verified_at">
+      <DataType>datetime|0s</DataType>
+      <NotNull>1</NotNull>
+      <Position>5</Position>
+    </column>
+    <column id="304" parent="297" name="expired_at">
+      <DataType>datetime|0s</DataType>
+      <NotNull>1</NotNull>
+      <Position>6</Position>
+    </column>
+    <index id="305" parent="297" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <key id="302" parent="297" name="PRIMARY">
+    <index id="306" parent="297" name="id">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="307" parent="297" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="303" parent="298" name="id">
+    <key id="308" parent="297" name="id">
+      <UnderlyingIndexName>id</UnderlyingIndexName>
+    </key>
+    <column id="309" parent="298" name="id">
       <AutoIncrement>2</AutoIncrement>
       <DataType>bigint unsigned|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="304" parent="298" name="code">
+    <column id="310" parent="298" name="code">
       <DataType>varchar(200)|0s</DataType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="305" parent="298" name="phone">
+    <column id="311" parent="298" name="phone">
       <DataType>varchar(200)|0s</DataType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="306" parent="298" name="receiver">
+    <column id="312" parent="298" name="receiver">
       <DataType>varchar(200)|0s</DataType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <column id="307" parent="298" name="payload">
+    <column id="313" parent="298" name="payload">
       <DataType>varchar(200)|0s</DataType>
       <NotNull>1</NotNull>
       <Position>5</Position>
     </column>
-    <column id="308" parent="298" name="verified_at">
+    <column id="314" parent="298" name="verified_at">
       <DataType>date|0s</DataType>
       <NotNull>1</NotNull>
       <Position>6</Position>
     </column>
-    <column id="309" parent="298" name="expired_at">
+    <column id="315" parent="298" name="expired_at">
       <DataType>date|0s</DataType>
       <NotNull>1</NotNull>
       <Position>7</Position>
     </column>
-    <index id="310" parent="298" name="PRIMARY">
+    <index id="316" parent="298" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="311" parent="298" name="id">
+    <index id="317" parent="298" name="id">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <key id="312" parent="298" name="PRIMARY">
+    <key id="318" parent="298" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <key id="313" parent="298" name="id">
+    <key id="319" parent="298" name="id">
       <UnderlyingIndexName>id</UnderlyingIndexName>
     </key>
   </database-model>

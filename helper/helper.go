@@ -49,11 +49,11 @@ func BadRequest(writer http.ResponseWriter, request *http.Request, err interface
 
 func ValidationError(writer http.ResponseWriter, request *http.Request, err interface{}) {
 	writer.Header().Set("Content-Type", "application/json")
-	writer.WriteHeader(http.StatusForbidden)
+	writer.WriteHeader(http.StatusUnprocessableEntity)
 
 	webResponse := entity.Response{
-		Code:   403,
-		Status: "VALIDATION ERROR",
+		Code:   422,
+		Status: "UNPROCESSABLE",
 		Data:   err,
 	}
 	WriteToResponseBody(writer, webResponse)

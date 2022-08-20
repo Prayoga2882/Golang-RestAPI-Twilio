@@ -45,11 +45,11 @@ func CheckOTP(to entity.Verification) error {
 
 	resp, err := client.VerifyV2.CreateVerificationCheck(VERIFY_SERVICE_SID, params)
 	if err != nil {
-		return errors.New("code not match ")
+		return errors.New("CODE NOT MATCH")
 	}
 
 	if *resp.Status == "approved" {
-		fmt.Println("Correct !")
+		fmt.Println("CORRECT !")
 		return nil
 	} else {
 		fmt.Println("INCORRECT !")
