@@ -1,6 +1,8 @@
 package helper
 
 import (
+	"context"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"github.com/golang-jwt/jwt"
@@ -132,4 +134,13 @@ func WriteToResponseBody(writer http.ResponseWriter, response interface{}) {
 	encoder := json.NewEncoder(writer)
 	err := encoder.Encode(response)
 	HandlePanic(err)
+}
+
+func UserExists(ctx context.Context, db *sql.DB, phone string) bool {
+	sqlStmt := `SELECT phone FROM users WHERE phone = ?`
+	err := db.QueryRowContext(ctx, sqlStmt, phone).Scan(&phone)
+	if err != nil {
+		return false
+	}
+	return true
 }

@@ -43,6 +43,10 @@ func (service *OTPservicesImplementation) Create(ctx context.Context, request en
 		ExpiredAt:  time.Now().Add(3 * time.Minute),
 	}
 
+	if helper.UserExists(ctx, service.db, request.Phone) {
+		panic(helper.NewHandleError("ALREADY USED GUYS"))
+	}
+
 	requestFinal, err := service.OTPrepository.Create(ctx, service.db, requestClient)
 	if err != nil {
 		log.Println("SERVICES CREATE 1")
@@ -85,7 +89,7 @@ func (service *OTPservicesImplementation) Verification(ctx context.Context, requ
 
 	today := time.Now()
 	expiredAt := userData.ExpiredAt
-	if today != expiredAt {
+	if today == expiredAt {
 		panic(helper.NewHandleError("EXPIRED"))
 	}
 	err = controllers.CheckOTP(requestClient)
