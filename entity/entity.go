@@ -14,9 +14,7 @@ type User struct {
 type Verification struct {
 	Id         int       `json:"id"`
 	Code       string    `validate:"required" json:"code"`
-	Phone      string    `validate:"required" json:"phone"`
-	Receiver   string    `validate:"required" json:"receiver"`
-	Payload    string    `validate:"required" json:"payload"`
+	Phone      string    `validate:"required,e164" json:"phone"`
 	VerifiedAt time.Time `json:"verifiedAt"`
 	ExpiredAt  time.Time `json:"expiredAt"`
 }

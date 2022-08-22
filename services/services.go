@@ -29,11 +29,6 @@ func NewOTPserviceImplementation(OTPrepository repository.OTPrepository, db *sql
 }
 
 func (service *OTPservicesImplementation) Create(ctx context.Context, request entity.Request) (entity.Response, error) {
-	err := service.validate.Struct(request)
-	if err != nil {
-		log.Println("SERVICES CREATE")
-		panic(helper.NewHandleError("MUST BE +62"))
-	}
 
 	requestClient := entity.User{
 		Phone:      request.Phone,
@@ -43,8 +38,22 @@ func (service *OTPservicesImplementation) Create(ctx context.Context, request en
 		ExpiredAt:  time.Now().Add(3 * time.Minute),
 	}
 
-	if helper.UserExists(ctx, service.db, request.Phone) {
-		panic(helper.NewHandleError("ALREADY USED GUYS"))
+	err := service.validate.Struct(request)
+	if err != nil {
+		log.Println("SERVICES CREATE")
+		panic(helper.NewHandleError("CREATE MUST BE +62"))
+	}
+
+	if requestClient.Receiver == "" {
+		panic(helper.NewHandleError("RECEIVER CANNOT BE EMPTY"))
+	}
+
+	if requestClient.Payload == "" {
+		panic(helper.NewHandleError("PAYLOAD CANNOT BE EMPTY"))
+	}
+
+	if helper.UserExists(ctx, service.db, requestClient.Phone) {
+		panic(helper.NewHandleError("PHONE ALREADY USED"))
 	}
 
 	requestFinal, err := service.OTPrepository.Create(ctx, service.db, requestClient)
@@ -63,44 +72,30 @@ func (service *OTPservicesImplementation) Create(ctx context.Context, request en
 }
 
 func (service *OTPservicesImplementation) Verification(ctx context.Context, request entity.Verification) (entity.Response, error) {
-	err := service.validate.Struct(request)
-	if err != nil {
-		fmt.Println("SERVICE VERIFICATION")
-		panic(helper.NewHandleError(err.Error()))
-	}
 
 	requestClient := entity.Verification{
 		Id:         request.Id,
 		Code:       request.Code,
 		Phone:      request.Phone,
-		Receiver:   request.Receiver,
-		Payload:    request.Payload,
 		VerifiedAt: time.Now(),
 		ExpiredAt:  time.Now().Add(3 * time.Minute),
 	}
 
-	userData := entity.User{
-		Id:         request.Id,
-		Phone:      request.Phone,
-		Payload:    request.Payload,
-		VerifiedAt: time.Now(),
-		ExpiredAt:  time.Now().Add(3 * time.Minute),
+	err := service.validate.Struct(request)
+	if err != nil {
+		fmt.Println("SERVICE VERIFICATION")
+		panic(helper.NewHandleError("PHONE MUST BE +62"))
 	}
 
-	today := time.Now()
-	expiredAt := userData.ExpiredAt
-	if today == expiredAt {
-		panic(helper.NewHandleError("EXPIRED"))
-	}
 	err = controllers.CheckOTP(requestClient)
 	if err != nil {
-		fmt.Println("SERVICE VERIFICATION 2", err)
+		fmt.Println("SERVICE VERIFICATION 1", err)
 		panic(helper.NewHandleError(err.Error()))
 	}
 
 	_, err = service.OTPrepository.Verification(ctx, service.db, requestClient)
 	if err != nil {
-		fmt.Println("SERVICE VERIFICATION 1")
+		fmt.Println("SERVICE VERIFICATION 2")
 		panic(helper.NewHandleError(err.Error()))
 	}
 

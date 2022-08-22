@@ -100,8 +100,6 @@ func RequestVerificationToVerification(response entity.RequestVerification) enti
 		Id:         response.Id,
 		Code:       response.Code,
 		Phone:      response.Phone,
-		Receiver:   response.Phone,
-		Payload:    response.Phone,
 		VerifiedAt: time.Now(),
 		ExpiredAt:  time.Now(),
 	}

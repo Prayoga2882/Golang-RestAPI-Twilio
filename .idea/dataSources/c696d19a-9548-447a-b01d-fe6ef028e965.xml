@@ -1100,42 +1100,32 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="312" parent="298" name="receiver">
-      <DataType>varchar(200)|0s</DataType>
+    <column id="312" parent="298" name="verified_at">
+      <DataType>date|0s</DataType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <column id="313" parent="298" name="payload">
-      <DataType>varchar(200)|0s</DataType>
+    <column id="313" parent="298" name="expired_at">
+      <DataType>date|0s</DataType>
       <NotNull>1</NotNull>
       <Position>5</Position>
     </column>
-    <column id="314" parent="298" name="verified_at">
-      <DataType>date|0s</DataType>
-      <NotNull>1</NotNull>
-      <Position>6</Position>
-    </column>
-    <column id="315" parent="298" name="expired_at">
-      <DataType>date|0s</DataType>
-      <NotNull>1</NotNull>
-      <Position>7</Position>
-    </column>
-    <index id="316" parent="298" name="PRIMARY">
+    <index id="314" parent="298" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="317" parent="298" name="id">
+    <index id="315" parent="298" name="id">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <key id="318" parent="298" name="PRIMARY">
+    <key id="316" parent="298" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <key id="319" parent="298" name="id">
+    <key id="317" parent="298" name="id">
       <UnderlyingIndexName>id</UnderlyingIndexName>
     </key>
   </database-model>

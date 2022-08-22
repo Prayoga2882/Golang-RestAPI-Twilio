@@ -35,8 +35,8 @@ func (otp *OTPrepositoryImplementation) Create(ctx context.Context, db *sql.DB, 
 }
 
 func (otp *OTPrepositoryImplementation) Verification(ctx context.Context, db *sql.DB, verified entity.Verification) (entity.Verification, error) {
-	sql := "INSERT INTO verification (code, phone, receiver, payload, verified_at, expired_at) VALUES (?, ?, ?, ?, ?, ?)"
-	execContext, err := db.ExecContext(ctx, sql, verified.Code, verified.Phone, verified.Receiver, verified.Payload, verified.VerifiedAt, verified.ExpiredAt)
+	sql := "INSERT INTO verification (code, phone, verified_at, expired_at) VALUES (?, ?, ?, ?)"
+	execContext, err := db.ExecContext(ctx, sql, verified.Code, verified.Phone, verified.VerifiedAt, verified.ExpiredAt)
 	if err != nil {
 		fmt.Println("REPOSITORY")
 		return verified, err

@@ -7,6 +7,8 @@
     <list default="true" id="e55fbc63-bb83-4df0-b2a4-3d4235b5097d" name="Changes" comment="OTP-CMG">
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/c696d19a-9548-447a-b01d-fe6ef028e965.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/c696d19a-9548-447a-b01d-fe6ef028e965.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/controllers.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/controllers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/entity/entity.go" beforeDir="false" afterPath="$PROJECT_DIR$/entity/entity.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/helper/helper.go" beforeDir="false" afterPath="$PROJECT_DIR$/helper/helper.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/repository/repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/repository/repository.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/services.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/services.go" afterDir="false" />
